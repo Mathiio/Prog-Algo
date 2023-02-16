@@ -14,43 +14,99 @@ struct Liste{
 
 struct DynaTableau{
     int* donnees;
-    // your code
 };
 
 
 void initialise(Liste* liste)
 {
-
+    liste->premier=nullptr;
 }
 
 bool est_vide(const Liste* liste)
 {
-    return false;
+   return liste == NULL;
 }
+
+
 
 void ajoute(Liste* liste, int valeur)
 {
+    Noeud *newliste = new Noeud();
+    newliste->donnee = valeur;
+    newliste->suivant = nullptr;
 
+    Noeud *current = liste->premier;
+
+    if(current == nullptr){
+        liste->premier = newliste;
+    }
+    else{
+        while(current->suivant != nullptr){ 
+            current = current->suivant;
+        }
+        current->suivant = newliste;
+    }
 }
+
+
+
 
 void affiche(const Liste* liste)
 {
-
+    Noeud *current = liste->premier;
+    while (current != nullptr){
+        cout << current->donnee << endl;
+        current = current->suivant;
+    }
 }
+
+
 
 int recupere(const Liste* liste, int n)
 {
-    return 0;
+    Noeud *current = liste->premier;
+    int i=0;
+    if(est_vide(liste)){
+        cout << "La liste est vide !" << endl;
+        return -1;
+    }
+    while(i<n){
+        i++;
+        current=current->suivant;
+    }
+    return current->donnee;
 }
+
+
 
 int cherche(const Liste* liste, int valeur)
 {
-    return -1;
+    Noeud *current = liste->premier;
+    int pos=1;
+    if(est_vide(liste)){
+        cout << "La liste est vide !" << endl;
+        return -1;
+    }
+    while(!(valeur==current->donnee)){
+        current=current->suivant;
+        pos++;
+    }
+    return pos;
 }
+
 
 void stocke(Liste* liste, int n, int valeur)
 {
-
+    Noeud *current = liste->premier;
+    int i=1;
+    if(est_vide(liste)){
+        cout << "La liste est vide !" << endl;
+    }
+    while(i<n){
+        i++;
+        current=current->suivant;
+    }
+    current->donnee= valeur;
 }
 
 void ajoute(DynaTableau* tableau, int valeur)
@@ -155,7 +211,7 @@ int main()
     std::cout << "5e valeur du tableau " << recupere(&tableau, 4) << std::endl;
 
     std::cout << "21 se trouve dans la liste à " << cherche(&liste, 21) << std::endl;
-    std::cout << "15 se trouve dans la liste à " << cherche(&tableau, 15) << std::endl;
+    std::cout << "15 se trouve dans le tableau à " << cherche(&tableau, 15) << std::endl;
 
     stocke(&liste, 4, 7);
     stocke(&tableau, 4, 7);
@@ -202,3 +258,5 @@ int main()
 
     return 0;
 }
+
+
