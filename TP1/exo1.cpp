@@ -1,24 +1,17 @@
-#include "tp1.h"
-#include <QApplication>
-#include <time.h>
+#include <iostream>
 
-#define return_and_display(result) return _.store(result);
-
-long power(long value, long n)
-{
-    Context _("power", value, n); // do not care about this, it allow the display of call stack
-
-    // your code
-    // return_and_display shows the result in the window and returns it
-    return_and_display(1);
+int fibonacci(int n) {
+    if (n == 0) {
+        return 0;
+    } else if (n == 1) {
+        return 1;
+    } else {
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
 }
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);  // create a window manager
-    MainWindow::instruction_duration = 400;  // make a pause between instruction display
-    MainWindow* w = new PowerWindow(power); // create a window for this exercice
-    w->show(); // show exercice
-
-    return a.exec(); // main loop while window is opened
+int main() {
+    int n = 7;
+    std::cout << "La valeur " << n << " de la suite de Fibonacci est égale à : " << fibonacci(n) << std::endl;
+    return 0;
 }

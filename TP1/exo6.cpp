@@ -14,6 +14,8 @@ struct Liste{
 
 struct DynaTableau{
     int* donnees;
+    int capacite;
+    int count;
 };
 
 
@@ -22,11 +24,11 @@ void initialise(Liste* liste)
     liste->premier=nullptr;
 }
 
+
 bool est_vide(const Liste* liste)
 {
    return liste == NULL;
 }
-
 
 
 void ajoute(Liste* liste, int valeur)
@@ -49,8 +51,6 @@ void ajoute(Liste* liste, int valeur)
 }
 
 
-
-
 void affiche(const Liste* liste)
 {
     Noeud *current = liste->premier;
@@ -61,14 +61,12 @@ void affiche(const Liste* liste)
 }
 
 
-
 int recupere(const Liste* liste, int n)
 {
     Noeud *current = liste->premier;
     int i=0;
     if(est_vide(liste)){
         cout << "La liste est vide !" << endl;
-        return -1;
     }
     while(i<n){
         i++;
@@ -78,14 +76,12 @@ int recupere(const Liste* liste, int n)
 }
 
 
-
 int cherche(const Liste* liste, int valeur)
 {
     Noeud *current = liste->premier;
     int pos=1;
     if(est_vide(liste)){
         cout << "La liste est vide !" << endl;
-        return -1;
     }
     while(!(valeur==current->donnee)){
         current=current->suivant;
@@ -109,41 +105,96 @@ void stocke(Liste* liste, int n, int valeur)
     current->donnee= valeur;
 }
 
+
 void ajoute(DynaTableau* tableau, int valeur)
 {
-
+    // Si le tableau est vide, allouez de la mémoire pour un élément.
+    if (tableau->donnees == NULL) {
+        tableau->donnees = (int*) malloc(sizeof(int));
+        tableau->capacite = 1;
+    }
+    // Si le tableau est plein, allouez de la mémoire pour deux fois la capacité actuelle.
+    else if (tableau->count == tableau->capacite) {
+        tableau->capacite *= 2;
+        tableau->donnees = (int*) realloc(tableau->donnees, tableau->capacite * sizeof(int));
+    }
+    // Ajoutez la nouvelle valeur à la fin du tableau.
+    tableau->donnees[tableau->count] = valeur;
+    tableau->count++;
 }
 
 
 void initialise(DynaTableau* tableau, int capacite)
 {
-
+    tableau->capacite = capacite;
+    tableau->donnees = (int*) malloc(capacite*sizeof(int));
+    tableau->count = 0;
 }
+
 
 bool est_vide(const DynaTableau* liste)
 {
-    return false;
+    if (liste->donnees == NULL) {
+        return 1; 
+    } else {
+        return 0; 
+    }
 }
 
-void affiche(const DynaTableau* tableau)
+
+void affiche(DynaTableau* tableau)
 {
-
+    if (est_vide(tableau)) {
+        cout << "Le tableau est vide !" << endl;
+    }
+    int counter =0;
+    for (int i = 0; i < tableau->capacite; i++) {
+         cout <<tableau->donnees[i] << endl;
+         counter++;
+    }
+    tableau->count = counter;
 }
+
 
 int recupere(const DynaTableau* tableau, int n)
 {
-    return 0;
+    int i=0;
+    if(est_vide(tableau)){
+        cout << "Le tableau est vide !" << endl;
+    }
+    while(i<n){
+        i++;
+    }
+    return tableau->donnees[i];
 }
+
 
 int cherche(const DynaTableau* tableau, int valeur)
 {
-    return -1;
+    int pos=0;
+    if(est_vide(tableau)){
+        cout << "Le tableau est vide !" << endl;
+    }
+    while(!(valeur==tableau->donnees[pos])){
+        pos++;
+    }
+    pos++;
+    return pos;
 }
+
 
 void stocke(DynaTableau* tableau, int n, int valeur)
 {
-
+    int i=0;
+    if(est_vide(tableau)){
+        cout << "Le tableau est vide !" << endl;
+    }
+    while(i<(n-1)){
+        i++;
+    }
+    tableau->donnees[i]=valeur;
 }
+
 
 //void pousse_file(DynaTableau* liste, int valeur)
 void pousse_file(Liste* liste, int valeur)
@@ -154,6 +205,12 @@ void pousse_file(Liste* liste, int valeur)
 //int retire_file(Liste* liste)
 int retire_file(Liste* liste)
 {
+    // Noeud *current = liste->premier;
+    // if(est_vide(liste)){
+    //     cout << "La liste est vide !" << endl;
+    // }
+    // liste->premier = liste->premier->suivant;
+    // free(current);
     return 0;
 }
 
