@@ -27,7 +27,7 @@ void initialise(Liste* liste)
 
 bool est_vide(const Liste* liste)
 {
-   return liste == NULL;
+   return liste->premier == NULL;
 }
 
 
@@ -134,11 +134,7 @@ void initialise(DynaTableau* tableau, int capacite)
 
 bool est_vide(const DynaTableau* liste)
 {
-    if (liste->donnees == NULL) {
-        return 1; 
-    } else {
-        return 0; 
-    }
+    return liste->donnees == NULL;
 }
 
 
@@ -196,34 +192,86 @@ void stocke(DynaTableau* tableau, int n, int valeur)
 }
 
 
-//void pousse_file(DynaTableau* liste, int valeur)
 void pousse_file(Liste* liste, int valeur)
 {
+    Noeud *newliste = new Noeud();
+    Noeud *current=liste->premier;
 
+    if(est_vide(liste)){
+        cout << "La liste est vide !" << endl;
+    }
+    if(current == nullptr){
+        newliste->donnee = valeur;
+        newliste->suivant = nullptr;
+        liste->premier = newliste;
+    }
+    else{
+        newliste->donnee = valeur;
+        newliste->suivant = current;
+        liste->premier = newliste;
+    }
+    // ajoute un élément au début de la liste et pousse les autres
 }
 
-//int retire_file(Liste* liste)
+
 int retire_file(Liste* liste)
 {
-    // Noeud *current = liste->premier;
-    // if(est_vide(liste)){
-    //     cout << "La liste est vide !" << endl;
-    // }
-    // liste->premier = liste->premier->suivant;
-    // free(current);
-    return 0;
+    int numb_suppr=0;
+    Noeud *current = liste->premier;
+    if(est_vide(liste)){
+        cout << "La liste est vide !" << endl;
+    }
+    liste->premier = liste->premier->suivant;
+    numb_suppr=current->donnee;
+    free(current);
+    return numb_suppr;
+    // supprime le dernier élément de ma liste (donc au début)
 }
 
-//void pousse_pile(DynaTableau* liste, int valeur)
+
 void pousse_pile(Liste* liste, int valeur)
 {
+    Noeud *newliste = new Noeud();
+    newliste->donnee = valeur;
+    newliste->suivant = nullptr;
 
+    Noeud *current = liste->premier;
+
+    if(current == nullptr){
+        liste->premier = newliste;
+    }
+    else{
+        while(current->suivant != nullptr){ 
+            current = current->suivant;
+        }
+        current->suivant = newliste;
+    }
 }
 
-//int retire_pile(DynaTableau* liste)
+
 int retire_pile(Liste* liste)
 {
-    return 0;
+    int numb_suppr=0;
+    if(est_vide(liste)){
+        cout << "La liste est vide !" << endl;
+    } 
+    else if (liste->premier->suivant == nullptr) {
+        // Si la liste ne contient qu'un élément, on le supprime
+        delete liste->premier;
+        liste->premier = nullptr;
+    } else {
+        Noeud *current = liste->premier;
+        // Sinon, on parcourt la liste jusqu'à l'avant-dernier élément
+        while (current->suivant->suivant != nullptr) {
+            current = current->suivant;
+        }
+        // On supprime le dernier élément
+        numb_suppr = current->suivant->donnee;
+        delete current->suivant;
+        current->suivant = nullptr;
+    }
+    // supprime le dernier élément empilé de ma liste (dernier élément de la liste)
+    return numb_suppr;
 }
 
 

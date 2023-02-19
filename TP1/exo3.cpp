@@ -1,29 +1,24 @@
-#include "tp1.h"
-#include <QApplication>
-#include <time.h>
+#include <iostream>
 
-#define return_and_display(result) return _.store(result);
-
-
-int search(int value, Array& toSort, int size)
-{
-    Context _("search", value, size); // do not care about this, it allow the display of call stack
-
-    // your code
-    // check the last cell and if it does not correspond
-    // then consider a smaller array when recalling search
+int search(int value, int array[], int size) {
+    if (size == 0) {
+        return -1; 
+    } else if (array[size - 1] == value) {
+        return size - 1;
+    } else {
+        return search(value, array, size - 1);
+    }
 }
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);  // create a window manager
-    MainWindow::instruction_duration = 400;  // make a pause between instruction display
-    MainWindow* w = new SearchWindow(search); // create a window for this exercice
-    w->show(); // show exercice
-
-    return a.exec(); // main loop while window is opened
+int main() {
+    int array[] = {2, 28, 41, 4, 12, 21, 5, 207};
+    int value = 21;
+    int size = sizeof(array) / sizeof(array[0]);
+    int index = search(value, array, size);
+    if (index == -1) {
+        std::cout << "L'index de la valeur " << value << " n'a pas été trouvé..." << std::endl;
+    } else {
+        std::cout << "L'index de la valeur " << value << " est : " << index << std::endl;
+    }
+    return 0;
 }
-
-
-
-

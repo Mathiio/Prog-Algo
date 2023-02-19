@@ -1,28 +1,38 @@
-#include "tp1.h"
-#include <QApplication>
-#include <time.h>
+#include <iostream>
 
-#define return_and_display(result) return _.store(result);
 
-void allEvens(Array& evens, Array& array, int evenSize, int arraySize)
-{
-    Context _("allEvens", evenSize, arraySize); // do not care about this, it allow the display of call stack
 
-    // your code
+void allEvens(int *evens, int *array, int *evenSize, int *arraySize) {
+    if (array[*arraySize-1] % 2 == 0) {
+        evens[(*evenSize)] = array[*arraySize-1];
+        (*evenSize)++;
+    }
 
-    return;
-}
-
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);  // create a window manager
-    MainWindow::instruction_duration = 400;  // make a pause between instruction display
-    MainWindow* w = new AllEvensWindow(allEvens); // create a window for this exercice
-    w->show(); // show exercice
-
-    return a.exec(); // main loop while window is opened
+    if (*arraySize > 0) {
+        (*arraySize)--;
+        allEvens(evens, array, evenSize, arraySize);
+    }
 }
 
 
+int main() {
+    int *evens = new int[100];
+    int array[] = {9, 2, 5, 228, 24, 33, 121, 1017, 402, 68, 79};  
+    int evenSize = 0;  
+    int arraySize = 11;  
 
 
+    std::cout << "Les nombres du tableau initial sont :";
+    for (int j = 0; j < arraySize; j++) {
+        std::cout << array[j] << ", ";
+    }
+    std::cout << std::endl;
+
+    allEvens(evens, array, &evenSize, &arraySize);
+
+    std::cout << "Les nombres du tableau de nombres pairs sont : ";
+    for (int i = 0; i < evenSize; i++) {
+        std::cout << evens[i] << " ";
+    }
+    std::cout << std::endl;
+}
