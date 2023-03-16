@@ -7,8 +7,22 @@ MainWindow* w=nullptr;
 
 void insertionSort(Array& toSort){
 	Array& sorted=w->newArray(toSort.size());
+	int n = toSort.size();
+    sorted[0] = toSort[0];
 
-	// insertion sort from toSort to sorted
+    // parcourt du tableau
+    for (int i = 1; i < n; i++) {
+        int key = toSort[i];
+        int j = i - 1;
+
+        // Déplacer les éléments du tableau trié qui sont plus grands que la clé
+        while (j >= 0 && sorted[j] > key) {
+            sorted[j + 1] = sorted[j];
+            j = j - 1;
+        }
+        sorted[j + 1] = key;
+    }
+
 	
 	toSort=sorted; // update the original array
 }

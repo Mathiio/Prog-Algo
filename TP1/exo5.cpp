@@ -21,10 +21,6 @@ int isMandelbrot(Point z, Point point, int n){
     }
 
     return isMandelbrot(z_next, point, n-1);
-    // check length of z
-    // if Mandelbrot, return 1 or n (check the difference)
-    // otherwise, process the square of z and recall
-    // isMandebrot
     return 0;
 }
 
