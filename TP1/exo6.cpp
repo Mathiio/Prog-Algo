@@ -216,16 +216,35 @@ void pousse_file(Liste* liste, int valeur)
 
 int retire_file(Liste* liste)
 {
-    int numb_suppr=0;
-    Noeud *current = liste->premier;
+    // int numb_suppr=0;
+    // Noeud *current = liste->premier;
+    // if(est_vide(liste)){
+    //     cout << "La liste est vide !" << endl;
+    // }
+    // liste->premier = liste->premier->suivant;
+    // numb_suppr=current->donnee;
+    // free(current);
+    // return numb_suppr;
+
+
+    int numb_suppr = 0;
     if(est_vide(liste)){
         cout << "La liste est vide !" << endl;
     }
-    liste->premier = liste->premier->suivant;
-    numb_suppr=current->donnee;
-    free(current);
+    if (liste->premier->suivant == nullptr) {
+        numb_suppr = liste->premier->donnee;
+        free(liste->premier);
+        liste->premier = nullptr;
+        return numb_suppr;
+    }
+    Noeud* current = liste->premier;
+    while (current->suivant->suivant != nullptr) {
+        current = current->suivant;
+    }
+    numb_suppr = current->suivant->donnee;
+    free(current->suivant);
+    current->suivant = nullptr;
     return numb_suppr;
-    // supprime le dernier élément de ma liste (donc au début)
 }
 
 
