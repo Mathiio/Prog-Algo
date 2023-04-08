@@ -17,37 +17,50 @@ struct SearchTreeNode : public Node
 
     void initNode(int value)
     {
-        // init initial node without children
+        // Initialise noeuds sans enfants
         this->left = nullptr;
         this->right = nullptr;
         this->value = value;
     }
 
 	void insertNumber(int value) {
-    // create a new node to insert
+    // Crée un nouveau noeud
     SearchTreeNode* newNode = new SearchTreeNode(value);
+    // Lance initialisation noeud avec value
     newNode->initNode(value);
 
 
-    // traverse the tree to find the right position to insert the new node
+    // Parcourir arbre pour trouver position du nouveau noeud
+    // Définit noeud actuel
     SearchTreeNode* currentNode = this;
+    // Tant qu'on ne trouve pas place pour nouveau noeud.
     while (true) {
+        // Si valeur nouveau noeud inférieure à valeur noeud actuel
         if (value < currentNode->value) {
+            // Si noeud actuel a pas fils gauche
             if (currentNode->left == nullptr) {
+                // Insère nouveau noeud sur fils gauche du noeud actuel.
                 currentNode->left = newNode;
                 return;
+                // Si noeud actuel a déjà fils gauche
             } else {
+                // Noeud actuel égal fils gauche puis recherche continue
                 currentNode = currentNode->left;
             }
+            // Si valeur nouveau noeud supérieure à valeur du noeud actuel
         } else if (value > currentNode->value) {
+            // Si noeud actuel a pas fils droit
             if (currentNode->right == nullptr) {
+                // Insère nouveau noeud sur fils droit du noeud actuel.
                 currentNode->right = newNode;
                 return;
+                // Si noeud actuel a déjà fils droit
             } else {
+                // Noeud actuel égal fils droit puis recherche continue
                 currentNode = currentNode->right;
             }
+            // Si valeur nouveau noeud existe deja on insère pas
         } else {
-            // the value already exists in the tree, no need to insert
             delete newNode;
             return;
         }
@@ -57,32 +70,27 @@ struct SearchTreeNode : public Node
     
 
 	uint height() const	{
-        // should return the maximum height between left child and
-        // right child +1 for itself. If there is no child, return
-        // just 1
         if (this->isLeaf()) {
             return 1;
         } else {
-        // calculate the height of the left and right subtrees recursively
+        // Calcule hauteur branche droite avec récursivité
         uint leftHeight = this->left ? this->left->height() : 0;
         uint rightHeight = this->right ? this->right->height() : 0;
         
-        // return the maximum height plus 1 for the node itself
+        // Renvoi hauteur maximale plus 1 pour compter noeud actuel
         return std::max(leftHeight, rightHeight) + 1;
         }
     }
 
 	uint nodesCount() const {
-        // should return the sum of nodes within left child and
-        // right child +1 for itself. If there is no child, return
-        // just 1
-        uint count = 1; // count the current node
+        // Compter noeud actuel
+        uint count = 1; 
 
-        // if there is a left child, add its count to the total count
+        // Si enfant gauche existe, comptabiliser dans somme totale
         if (this->left != nullptr) {
             count += this->left->nodesCount();
         }
-        // if there is a right child, add its count to the total count
+        // Si enfant droit existe, comptabiliser dans somme totale
         if (this->right != nullptr) {
             count += this->right->nodesCount();
         }  
@@ -90,22 +98,25 @@ struct SearchTreeNode : public Node
 	}
 
 	bool isLeaf() const {
-        // return True if the node is a leaf (it has no children)
+        // Renvoi true si arbre a pas enfants
         return (this->left == nullptr && this->right == nullptr);
 	}
 
+    // fill leaves array with all leaves of this tree
 	void allLeaves(Node* leaves[], uint& leavesCount) {
-        // fill leaves array with all leaves of this tree
+        // Si noeud actuel a pas enfants
         if (this->isLeaf()) {
-            // if current node is a leaf, add it to the array
+            // Ajoute noeud actuel au tableau
             leaves[leavesCount] = this;
+            // Met à jour nombre de fuilles  du tableau
             leavesCount++;
+        // Si noeud actuel a enfants 
         } else {
-            // if the current node is not a leaf, recursively call
-            // allLeaves function on its left and right children
+        // Si noeud actuel a pas enfant gauche
         if (this->left != nullptr) {
             this->left->allLeaves(leaves, leavesCount);
         }
+        // Si noeud actuel a pas enfant droit
         if (this->right != nullptr) {
             this->right->allLeaves(leaves, leavesCount);
         }
@@ -113,7 +124,6 @@ struct SearchTreeNode : public Node
 	}
 
 	void inorderTravel(Node* nodes[], uint& nodesCount) {
-        // fill nodes array with all nodes with inorder travel
         if (this->left != nullptr) {
             this->left->inorderTravel(nodes, nodesCount);
         }
