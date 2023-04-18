@@ -93,7 +93,6 @@ void buildHuffmanHeap(const Array& frequences, HuffmanHeap& priorityMinHeap, int
      **/
 
     // Your code
-    // Insert non-null frequences into the heap
     for (int i = 0; i < frequences.size(); i++) {
         if (frequences[i] > 0) {
             HuffmanNode* newNode = new HuffmanNode(i, frequences[i]);
@@ -101,11 +100,6 @@ void buildHuffmanHeap(const Array& frequences, HuffmanHeap& priorityMinHeap, int
             heapSize++;
         }
     }
-
-    // Heapify the entire heap
-    // for (int i = heapSize / 2 - 1; i >= 0; i--) {
-    //     priorityMinHeap.heapify(heapSize, i);
-    // }
 }
 
 void HuffmanHeap::heapify(int heapSize, int nodeIndex)
@@ -121,17 +115,17 @@ void HuffmanHeap::heapify(int heapSize, int nodeIndex)
     int leftChild = 2 * nodeIndex + 1;
     int rightChild = 2 * nodeIndex + 2;
 
-    // Check if left child is smaller than parent
+    // Vérifie si enfant gauche est plus petit que parent
     if (leftChild < heapSize && this->get(leftChild)->frequences < this->get(smallest)->frequences) {
         smallest = leftChild;
     }
 
-    // Check if right child is smaller than parent
+    // Vérifie si enfant droit est plus petit que parent
     if (rightChild < heapSize && this->get(rightChild)->frequences < this->get(smallest)->frequences) {
         smallest = rightChild;
     }
 
-    // If one of the children is smaller, swap the nodes and heapify the subtree
+    // Si un enfant est plus petit que son parent alors on inverse
     if (smallest != nodeIndex) {
         this->swap(nodeIndex, smallest);
         heapify(heapSize, smallest);
@@ -182,12 +176,19 @@ HuffmanNode* buildHuffmanTree(HuffmanHeap& priorityMinHeap, int heapSize)
      **/
 
     // Your code
+    // Boucle tant que plus que un noeud dans heapsize
+    // Jusqu'à ce que l'arbre de Huffman soit construit
     while (heapSize > 1) {
+        // Contient noeud avec plus petite fréquence de Heapsize et ajuste taille de heapsize
         HuffmanNode* left = priorityMinHeap.extractMinNode(heapSize--);
+        // Contient noeud avec deuxième plus petite fréquence de Heapsize et ajuste taille de heapsize
         HuffmanNode* right = priorityMinHeap.extractMinNode(heapSize--);
+        // Crée un noeud parent qui contient left et right, fréquence égale à la somme de celle des enfants
         HuffmanNode* parent = makeHuffmanSubTree(left, right);
+        // Insère noeud parent dans file de priorité et incrémente heapsize
         priorityMinHeap.insertHeapNode(heapSize++, parent);
     }
+    // Retourne dernier noeud de heapsize -> racine de arbre de Huffman
     return priorityMinHeap.extractMinNode(heapSize);
 }
 
@@ -240,7 +241,9 @@ string huffmanEncode(const string& toEncode, HuffmanNode* huffmanTree)
     huffmanTree->fillCharactersArray(charactersCodes);
     string encoded = "";
 
+    // Parcourt caractères de toEncode
     for (char c : toEncode) {
+        // Ajoute à chaîne encoded code Huffman du caractère c avec tableau characterCodes
         encoded += charactersCodes[c];
     }
 
@@ -259,24 +262,26 @@ string huffmanDecode(const string& toDecode, const HuffmanNode& huffmanTreeRoot)
     string decoded = "";
     const HuffmanNode* currentNode = nullptr;
 
+    // Initialise noeud actuel avec racine de l'arbre de huffman
     currentNode=&huffmanTreeRoot;
+    //Parcourt chaque caractère de chaine de toDecode (0 et 1)
     for (auto c : toDecode) {
-        // If the character is '0', move to the left child of the current node
+        // Si caractère est 0 alors noeud actuel devient enfant gauche 
         if (c == '0') {
             currentNode = currentNode->left;
         }
-        // If the character is '1', move to the right child of the current node
+        // Si caractère est 0 alors noeud actuel devient enfant droit 
         else if (c == '1') {
             currentNode = currentNode->right;
         }
-
-        // If the current node is a leaf node, add its decoded character to the decoded string
+        // Si noeud actuel contient caractère décodé
         if (currentNode->isLeaf()) {
+            // Ajout du noeud actuel à la chaine de caractère decoded
             decoded += currentNode->character;
-            currentNode = &huffmanTreeRoot; // reset the current node to the root of the tree
+            // Réinitialise noeud actuel avec racine de l'arbre de Huffman pour décoder caractère suivant
+            currentNode = &huffmanTreeRoot; 
         }
     }
-
     return decoded;
 }
 
