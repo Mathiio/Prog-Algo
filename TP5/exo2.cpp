@@ -24,7 +24,15 @@ std::vector<string> TP5::names(
 unsigned long int hash(string key)
 {
     // return an unique hash id from key
-    return 0;
+    unsigned long int hash_id = 0;
+    // Itère sur tous caractère de chaîne key
+    for (char c : key) {
+        // Ajoute valeur entière du caractère à hash_id.
+        // Utilise somme des codes ASCII des caractères dans chaîne comme méthode de hachage
+        hash_id += static_cast<unsigned long int>(c);
+    }
+    // Retourne nombre entier unique pour chaîne de caractères key
+    return hash_id;
 }
 
 struct MapNode : public BinaryTree
@@ -53,7 +61,34 @@ struct MapNode : public BinaryTree
      */
     void insertNode(MapNode* node)
     {
-
+        // Si hachage de clé nv nœud est inférieur à hachage de clé noeud actuel (noeud passé en paramètre)
+        // On insère nv nœud dans sous-arbre gauche du noeud actuel
+        if (node->key_hash < this->key_hash) {
+            // Si sous-arbre gauche du noeud actuel nul 
+            if (this->left == nullptr) {
+                // insère nv noeud en enfant gauche du noeud actuel
+                this->left = node;
+                // Si non nul -> déjà enfant gauche
+            } else {
+                // Recherche de bonne position d'insertion dans sous-arbre gauche
+                // Appel récursif de insertNode de enfant gauche avec nv nœud en paramètre
+                this->left->insertNode(node);
+            }
+        }
+        // Si hachage de clé nv nœud est supérieur à hachage de clé noeud actuel (noeud passé en paramètre)
+        // On insère nv nœud dans sous-arbre droit du noeud actuel
+        else if (node->key_hash > this->key_hash) {
+            // Si sous-arbre droit du noeud actuel nul 
+            if (this->right == nullptr) {
+                // insère nv noeud en enfant droit du noeud actuel
+                this->right = node;
+                // Si non nul -> déjà enfant droit
+            } else {
+                // Recherche de bonne position d'insertion dans sous-arbre droit
+                // Appel récursif de insertNode de droit gauche avec nv nœud en paramètre
+                this->right->insertNode(node);
+            }
+        }
     }
 
     void insertNode(string key, int value)
@@ -80,7 +115,18 @@ struct Map
      */
     void insert(string key, int value)
     {
-
+        // Crée nouveau noeud avec "key" et "value"
+        MapNode* new_node = new MapNode(key, value);
+        // Vérifie si racine arbre nulle
+        if (this->root == nullptr) {
+            // Si oui -> place nv noeud à racine arbre
+            this->root = new_node;
+            // Si racine arbre non nulle -> noeud existant dans arbre
+        } else {
+            // Appel fonction "insertNode" du noeud racine avec nv noeud en paramètre
+            // Fonction qui insère nv noeud à bonne position dans arbre en fonction de valeur hachage de clé
+            this->root->insertNode(new_node);
+        }
     }
 
     /**
@@ -90,6 +136,25 @@ struct Map
      */
     int get(string key)
     {
+        // Calcule hash de la clé
+        unsigned long int key_hash = hash(key);
+
+        // Cherche clé dans arbre binaire de recherche
+        MapNode* current = root;
+        while (current != nullptr) {
+            // Si clé trouvée
+            if (key_hash == current->key_hash) {
+                return current->value;
+            // Si clé dans sous-arbre gauche
+            } else if (key_hash < current->key_hash) {
+                current = current->left;
+            // Si clé dans sous-arbre droit
+            } else {
+                current = current->right;
+            }
+        }
+
+        // Si clé non trouvé
         return -1;
     }
 

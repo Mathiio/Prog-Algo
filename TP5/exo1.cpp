@@ -18,12 +18,35 @@ std::vector<string> TP5::names(
 int HashTable::hash(std::string element)
 {
     // use this->size() to get HashTable size
-    return 0;
+    int index = 0;
+    // Parcourt tous les caractères de element
+    for (char c : element) {
+        // Pour chaque caractère -> indice augmenté de valeur du ASCII du caractère
+        index += c;
+    }
+    // Retourne indice modulo taille table hachage -> valeur entre 0 et size-1
+    return index % this->size();
 }
 
 void HashTable::insert(std::string element)
 {
     // use (*this)[i] or this->get(i) to get a value at index i
+    // Calcule index où élément doit être inséré avec fonction hash.
+    int index = hash(element);
+    int i = 0;
+    // Itère tant jusqu'à fin table hachage et qu'un élément à son index calculé.
+    while (i < this->size() && !(*this)[index].empty()) {
+        // On avance d'un index avec boucle (modulo) sur taille table de hachage.
+        // On revient au début de table si on est à la fin
+        index = (index + 1) % this->size();
+        i++;
+    }
+    // Si nombre essai = table hachage -> emplacements tous occupés
+    if (i == this->size()) {
+        return;
+    }
+    // Insère élément à index calculé dans table hachage.
+    (*this)[index] = element;
 }
 
 /**
@@ -34,13 +57,20 @@ void HashTable::insert(std::string element)
  */
 void buildHashTable(HashTable& table, std::string* names, int namesCount)
 {
-
+    for (int i = 0; i < namesCount; i++) {
+        table.insert(names[i]);
+    }
 }
 
 bool HashTable::contains(std::string element)
 {
     // Note: Do not use iteration (for, while, ...)
-    return false;
+    // Calcule indice hachage de élément avec fonction hash
+    int index = hash(element);
+    // Récupère valeur stockée dans table hachage à indice index
+    std::string value = (*this)[index];
+    // Renvoie cette valeur
+    return value == element;
 }
 
 
