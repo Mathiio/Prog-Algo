@@ -124,42 +124,51 @@ struct SearchTreeNode : public Node
 	}
 
 	void inorderTravel(Node* nodes[], uint& nodesCount) {
+        // Vérifie si noeud actuel a enfant gauche
         if (this->left != nullptr) {
+            // Rappel de la fonction sur enfant gauche noeud actuel
             this->left->inorderTravel(nodes, nodesCount);
         }
+        // Ajoute noeud actuel dans tableau de nodes à indice nodesCount.
         nodes[nodesCount] = this;
+        // Incrémente nodesCount
         nodesCount++;
+        // Vérifie si noeud actuel a enfant gauche
         if (this->right != nullptr) {
+            // Rappel de la fonction sur enfant droit noeud actuel
             this->right->inorderTravel(nodes, nodesCount);
         }
 	}
 
 	void preorderTravel(Node* nodes[], uint& nodesCount) {
-        // fill nodes array with all nodes with preorder travel
-        // add the current node to the array
+        // Ajoute noeud courant au tableau nodes à indice nodesCount
         nodes[nodesCount] = this;
+        // Incrémente nodesCount
         nodesCount++;
 
-        // recursively call the function on the left subtree
+        // Vérifie si noeud actuel a enfant gauche
         if (this->left != nullptr) {
+            // Rappel de la fonction sur enfant gauche noeud actuel
             this->left->preorderTravel(nodes, nodesCount);
         }
 
-        // recursively call the function on the right subtree
+        // Vérifie si noeud actuel a enfant droit
         if (this->right != nullptr) {
+            // Rappel de la fonction sur enfant droit noeud actuel
             this->right->preorderTravel(nodes, nodesCount);
         }
 	}
 
 	void postorderTravel(Node* nodes[], uint& nodesCount) {
-        // fill nodes array with all nodes with postorder travel
-            // traverse the left subtree
+        // Vérifie si noeud actuel a enfant gauche
         if (this->left != nullptr) {
+            // Rappel de la fonction sur enfant gauche noeud actuel
             this->left->postorderTravel(nodes, nodesCount);
         }
 
-        // traverse the right subtree
+        // Vérifie si noeud actuel a enfant gauche
         if (this->right != nullptr) {
+            // Rappel de la fonction sur enfant droit noeud actuel
             this->right->postorderTravel(nodes, nodesCount);
         }
 
