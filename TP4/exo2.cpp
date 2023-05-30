@@ -59,7 +59,7 @@ void processCharFrequences(string data, Array& frequences)
 
     // Your code
     frequences.fill(0);
-    for(uint i=0; i<data.length(); i++) {
+    for(int i=0; i<data.length(); i++) {
         frequences[data[i]]++;
     }
 }
