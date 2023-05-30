@@ -23,18 +23,17 @@ std::vector<string> TP5::names(
 
 unsigned long int hash(string key)
 {
-    // return an unique hash id from key
+    // taille de l'alphabet ASCII étendu
+    const int base = 128; 
     unsigned long int hash_id = 0;
     // Itère sur tous caractère de chaîne key
-    for (char c : key) {
-        // Ajoute valeur entière du caractère à hash_id.
-        // Utilise somme des codes ASCII des caractères dans chaîne comme méthode de hachage
-        hash_id += static_cast<unsigned long int>(c);
+    for (int i = 0; i < key.size(); i++) {
+        // Ajoute produit du code ASCII du caractère actuel et de la puissance de la base à la puissance key.size() - i
+        hash_id += key[i] * pow(base, key.size() - i);
     }
     // Retourne nombre entier unique pour chaîne de caractères key
     return hash_id;
 }
-
 struct MapNode : public BinaryTree
 {
 
