@@ -6,42 +6,79 @@ MainWindow* w = nullptr;
 
 void Graph::buildFromAdjenciesMatrix(int **adjacencies, int nodeCount)
 {
-	/**
-	  * Make a graph from a matrix
-	  * first create all nodes, add it to the graph then connect them
-	  * this->appendNewNode
-	  * this->nodes[i]->appendNewEdge
-	  */
+    for (int currentIndex = 0; currentIndex < nodeCount; currentIndex++) {
+        GraphNode* node = new GraphNode(currentIndex);
+        this->appendNewNode(node);
+    }
+
+    for (int startIndex = 0; startIndex < nodeCount; startIndex++) {
+        for (int EndIndex = 0; EndIndex < nodeCount; EndIndex++) {
+            if (adjacencies[startIndex][EndIndex] != 0) {
+                GraphNode* startNode = nodes[startIndex];
+                GraphNode* EndNode = nodes[EndIndex];
+                startNode->appendNewEdge(EndNode);
+            }
+        }
+    }
 }
 
 void Graph::deepTravel(GraphNode *first, GraphNode *nodes[], int &nodesSize, bool visited[])
 {
-	/**
-	  * Fill nodes array by travelling graph starting from first and using recursivity
-	  */
+    // Changer le booléen visited à true pour le noeud actuel
+    visited[first->value] = true;
+    nodes[nodesSize++] = first;
 
+    Edge* edge = first->edges;
+    while (edge != nullptr) {
+        GraphNode* destination = edge->destination;
+        if (!visited[destination->value]) {
+            deepTravel(destination, nodes, nodesSize, visited);
+        }
+        edge = edge->next;
+    }
 }
 
 void Graph::wideTravel(GraphNode *first, GraphNode *nodes[], int &nodesSize, bool visited[])
 {
-	/**
-	 * Fill nodes array by travelling graph starting from first and using queue
-	 * nodeQueue.push(a_node)
-	 * nodeQueue.front() -> first node of the queue
-	 * nodeQueue.pop() -> remove first node of the queue
-	 * nodeQueue.size() -> size of the queue
-	 */
 	std::queue<GraphNode*> nodeQueue;
-	nodeQueue.push(first);
+    nodeQueue.push(first);
+
+    while (!nodeQueue.empty()) {
+        GraphNode* current = nodeQueue.front();
+        nodeQueue.pop();
+
+        visited[first->value] = true;
+        nodes[nodesSize++] = first;
+
+        Edge* edge = current->edges;
+        while (edge != nullptr) {
+            GraphNode* destination = edge->destination;
+            if (!visited[destination->value]) {
+				visited[destination->value] = true;
+				nodes[nodesSize++] = destination;
+                nodeQueue.push(destination);
+            }
+			edge = edge->next;
+        }
+    }
 }
 
 bool Graph::detectCycle(GraphNode *first, bool visited[])
 {
-	/**
-	  Detect if there is cycle when starting from first
-	  (the first may not be in the cycle)
-	  Think about what's happen when you get an already visited node
-	**/
+    visited[first->value] = true;
+
+    Edge* edge = first->edges;
+    while (edge != nullptr) {
+        GraphNode* destination = edge->destination;
+        if (visited[destination->value]) {
+			return true;
+        } else {
+			if (detectCycle(destination, visited)){
+				return true;
+			}
+        }
+        edge = edge->next;
+    }
     return false;
 }
 
